@@ -61,7 +61,6 @@
   /**
    * Determine if an `object` is an `DataView`.
    *
-   * @private
    * @param {*} object The object to test.
    * @return {boolean} `true` if the `object` is a `DataView`,
    *  else false`
