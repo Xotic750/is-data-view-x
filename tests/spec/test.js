@@ -40,7 +40,7 @@
       expect(isDataView({})).toBe(false);
     });
 
-    ifHasDataView('hasArrayBuffer', function () {
+    ifHasDataView('hasDataView', function () {
       expect(isDataView(new ArrayBuffer(4))).toBe(false);
       expect(isDataView(new Int16Array(4))).toBe(false);
       expect(isDataView(new Int32Array(4))).toBe(false);

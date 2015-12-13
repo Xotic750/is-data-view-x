@@ -23,7 +23,7 @@ alt="npm version" height="18">
 
 isDataView module. Detect whether or not an object is a DataView.
 
-**Version**: 1.0.1  
+**Version**: 1.0.2  
 **Author:** Xotic750 <Xotic750@gmail.com>  
 **License**: [MIT](&lt;https://opensource.org/licenses/MIT&gt;)  
 **Copyright**: Xotic750  

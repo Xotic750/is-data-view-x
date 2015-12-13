@@ -22,7 +22,7 @@
  * </a>
  *
  * isDataView module. Detect whether or not an object is a DataView.
- * @version 1.0.1
+ * @version 1.0.2
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -34,8 +34,8 @@
 /*jshint bitwise:true, camelcase:true, curly:true, eqeqeq:true, forin:true,
   freeze:true, futurehostile:true, latedef:true, newcap:true, nocomma:true,
   nonbsp:true, singleGroups:true, strict:true, undef:true, unused:true,
-  es3:true, esnext:false, plusplus:true, maxparams:1, maxdepth:2,
-  maxstatements:16, maxcomplexity:9 */
+  es3:true, esnext:false, plusplus:true, maxparams:1, maxdepth:3,
+  maxstatements:8, maxcomplexity:4 */
 
 /*global module */
 
@@ -48,17 +48,19 @@
     DATAVIEW = hasDataView && DataView,
     getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor,
     getPrototypeOf = Object.getPrototypeOf,
-    getterDataView;
+    getByteLength;
 
   if (DATAVIEW) {
     try {
-      getterDataView = getOwnPropertyDescriptor(
-        getPrototypeOf(new DataView(new ArrayBuffer(4))),
+      getByteLength = getOwnPropertyDescriptor(
+        getPrototypeOf(new DATAVIEW(new ArrayBuffer(4))),
         'byteLength'
       ).get;
-      ES.Call(getterDataView, new DataView(new ArrayBuffer(4)));
+      if (typeof ES.Call(getByteLength, new DATAVIEW(new ArrayBuffer(4))) !== 'number') {
+        throw 'not a number';
+      }
     } catch (ignore) {
-      DATAVIEW = getterDataView = null;
+      DATAVIEW = getByteLength = null;
     }
   }
 
@@ -78,11 +80,11 @@
    * isDataView(dv); // true
    */
   module.exports = function isDataView(object) {
-    if (!DATAVIEW || !isObjectLike(object)) {
+    if (!getByteLength || !isObjectLike(object)) {
       return false;
     }
     try {
-      return typeof ES.Call(getterDataView, object) === 'number';
+      return typeof ES.Call(getByteLength, object) === 'number';
     } catch (ignore) {}
     return false;
   };
