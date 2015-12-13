@@ -11,19 +11,21 @@
 (function () {
   'use strict';
 
-  var isDataView, hasArrayBuffer, ifHasArrayBuffer,
-    hasDataView, ifHasDataView;
+  var isDataView, hasDataView, ifHasDataView;
   if (typeof module === 'object' && module.exports) {
     require('es5-shim');
-    require('es5-shim/es5-sham.js');
+    require('es5-shim/es5-sham');
+    if (typeof JSON === 'undefined') {
+      JSON = {};
+    }
+    require('json3').runInContext(null, JSON);
+    require('es6-shim');
     isDataView = require('../../index.js');
   } else {
     isDataView = returnExports;
   }
 
-  hasArrayBuffer = typeof ArrayBuffer === 'function';
-  ifHasArrayBuffer = hasArrayBuffer ? it : xit;
-  hasDataView = hasArrayBuffer && typeof DataView === 'function';
+  hasDataView = typeof DataView === 'function';
   ifHasDataView = hasDataView ? it : xit;
 
   describe('isDataView', function () {
@@ -38,7 +40,7 @@
       expect(isDataView({})).toBe(false);
     });
 
-    ifHasArrayBuffer('hasArrayBuffer', function () {
+    ifHasDataView('hasArrayBuffer', function () {
       expect(isDataView(new ArrayBuffer(4))).toBe(false);
       expect(isDataView(new Int16Array(4))).toBe(false);
       expect(isDataView(new Int32Array(4))).toBe(false);
@@ -47,9 +49,6 @@
       expect(isDataView(new Uint32Array(4))).toBe(false);
       expect(isDataView(new Float32Array(4))).toBe(false);
       expect(isDataView(new Float64Array(4))).toBe(false);
-    });
-
-    ifHasDataView('hasDataView', function () {
       expect(isDataView(new DataView(new ArrayBuffer(4)))).toBe(true);
     });
   });

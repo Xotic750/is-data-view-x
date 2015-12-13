@@ -42,20 +42,24 @@
 ;(function () {
   'use strict';
 
-  var hasToStringTag = require('has-to-string-tag-x'),
-    hasDataView = typeof DataView === 'function',
+  var hasDataView = typeof DataView === 'function',
     ES = require('es-abstract/es6'),
-    toStringTag = require('to-string-tag-x'),
     isObjectLike = require('is-object-like-x'),
     DATAVIEW = hasDataView && DataView,
     getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor,
     getPrototypeOf = Object.getPrototypeOf,
     getterDataView;
 
-  if (DATAVIEW && hasToStringTag) {
-    getterDataView = getOwnPropertyDescriptor(
-      getPrototypeOf(new DATAVIEW()), Symbol.toStringTag
-    ).get;
+  if (DATAVIEW) {
+    try {
+      getterDataView = getOwnPropertyDescriptor(
+        getPrototypeOf(new DataView(new ArrayBuffer(4))),
+        'byteLength'
+      ).get;
+      ES.Call(getterDataView, new DataView(new ArrayBuffer(4)));
+    } catch (ignore) {
+      DATAVIEW = getterDataView = null;
+    }
   }
 
   /**
@@ -77,11 +81,8 @@
     if (!DATAVIEW || !isObjectLike(object)) {
       return false;
     }
-    if (!hasToStringTag) {
-      return toStringTag(object) === '[object DataView]';
-    }
     try {
-      return ES.Call(getterDataView, object) === DATAVIEW;
+      return typeof ES.Call(getterDataView, object) === 'number';
     } catch (ignore) {}
     return false;
   };

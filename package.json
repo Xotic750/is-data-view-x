@@ -1,6 +1,6 @@
 {
   "name": "is-data-view-x",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "isDataView module.",
   "homepage": "https://github.com/Xotic750/is-data-view-x",
   "author": {
@@ -28,14 +28,14 @@
     "url": "https://github.com/Xotic750/is-data-view-x/issues"
   },
   "dependencies": {
-    "to-string-tag-x": "^1.0.0",
     "is-object-like-x": "^1.0.0",
-    "es-abstract": "^1.4.3",
-    "has-to-string-tag-x": "^1.0.0"
+    "es-abstract": "^1.4.3"
   },
   "devDependencies": {
     "es5-shim": "^4.4.0",
-    "jscs": "^2.5.1",
+    "es6-shim": "^0.33.13",
+    "json3": "^3.3.2",
+    "jscs": "^2.7.0",
     "uglify-js": "^2.6.1",
     "browserify": "12.0.1",
     "jasmine-node": "^1.14.5",
