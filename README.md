@@ -21,23 +21,24 @@ alt="devDependency status" height="18"/>
 alt="npm version" height="18">
 </a>
 
-isDataView module. Detect whether or not an object is a DataView.
+isDataView module. Detect whether or not an object is an ES6 DataView or
+a legacy DataView.
 
-**Version**: 1.0.2  
+**Version**: 1.0.3  
 **Author:** Xotic750 <Xotic750@gmail.com>  
 **License**: [MIT](&lt;https://opensource.org/licenses/MIT&gt;)  
 **Copyright**: Xotic750  
 <a name="exp_module_is-data-view-x--module.exports"></a>
-### `module.exports(object)` ⇒ <code>boolean</code> ⏏
+### `module.exports(object, [es6])` ⇒ <code>boolean</code> ⏏
 Determine if an `object` is an `DataView`.
 
 **Kind**: Exported function  
-**Returns**: <code>boolean</code> - `true` if the `object` is a `DataView`,
- else false`  
+**Returns**: <code>boolean</code> - `true` if the `object` is a `DataView`, else `false`.  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| object | <code>\*</code> | The object to test. |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| object | <code>\*</code> |  | The object to test. |
+| [es6] | <code>boolean</code> | <code>false</code> | If `true` then only ES6 DataView objects will be determined `true`. |
 
 **Example**  
 ```js

@@ -3,15 +3,15 @@
 /*jshint bitwise:true, camelcase:true, curly:true, eqeqeq:true, forin:true,
   freeze:true, futurehostile:true, latedef:true, newcap:true, nocomma:true,
   nonbsp:true, singleGroups:true, strict:true, undef:true, unused:true,
-  es3:true, esnext:false, plusplus:true, maxparams:1, maxdepth:1,
-  maxstatements:11, maxcomplexity:4 */
+  es3:true, esnext:false, plusplus:true, maxparams:1, maxdepth:3,
+  maxstatements:19, maxcomplexity:7 */
 
 /*global expect, module, require, describe, xit, it, returnExports */
 
 (function () {
   'use strict';
 
-  var isDataView, hasDataView, ifHasDataView;
+  var isDataView, ifHasDataView;
   if (typeof module === 'object' && module.exports) {
     require('es5-shim');
     require('es5-shim/es5-sham');
@@ -25,8 +25,7 @@
     isDataView = returnExports;
   }
 
-  hasDataView = typeof DataView === 'function';
-  ifHasDataView = hasDataView ? it : xit;
+  ifHasDataView = typeof DataView === 'function' ? it : xit;
 
   describe('isDataView', function () {
     it('basic', function () {
