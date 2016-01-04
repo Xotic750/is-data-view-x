@@ -32,7 +32,7 @@
     "is-object-like-x": "^1.0.1",
     "es-abstract": "^1.4.3",
     "to-string-tag-x": "^1.0.1",
-    "is-array-buffer-x": "^1.0.3"
+    "is-array-buffer-x": "^1.0.4"
   },
   "devDependencies": {
     "es5-shim": "^4.4.1",
