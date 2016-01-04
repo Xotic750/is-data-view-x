@@ -1,6 +1,6 @@
 {
   "name": "is-data-view-x",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "isDataView module. Detect whether or not an object is an ES6 DataView or a legacy DataView.",
   "homepage": "https://github.com/Xotic750/is-data-view-x",
   "author": {
