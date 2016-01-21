@@ -21,8 +21,7 @@ alt="devDependency status" height="18"/>
 alt="npm version" height="18">
 </a>
 
-isDataView module. Detect whether or not an object is an ES6 DataView or
-a legacy DataView.
+isDataView module. Detect whether or not an object is a DataView.
 
 <h2>ECMAScript compatibility shims for legacy JavaScript engines</h2>
 `es5-shim.js` monkey-patches a JavaScript context to contain all EcmaScript 5
@@ -41,21 +40,20 @@ es5-shim.js to be able to work properly.
 `es6.shim.js` provides compatibility shims so that legacy JavaScript engines
 behave as closely as possible to ECMAScript 6 (Harmony).
 
-**Version**: 1.0.7  
+**Version**: 1.0.8  
 **Author:** Xotic750 <Xotic750@gmail.com>  
 **License**: [MIT](&lt;https://opensource.org/licenses/MIT&gt;)  
 **Copyright**: Xotic750  
 <a name="exp_module_is-data-view-x--module.exports"></a>
-### `module.exports(object, [es6])` ⇒ <code>boolean</code> ⏏
+### `module.exports(object)` ⇒ <code>boolean</code> ⏏
 Determine if an `object` is an `DataView`.
 
 **Kind**: Exported function  
 **Returns**: <code>boolean</code> - `true` if the `object` is a `DataView`, else `false`.  
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| object | <code>\*</code> |  | The object to test. |
-| [es6] | <code>boolean</code> | <code>false</code> | If `true` then only ES6 DataView objects will be determined `true`. |
+| Param | Type | Description |
+| --- | --- | --- |
+| object | <code>\*</code> | The object to test. |
 
 **Example**  
 ```js

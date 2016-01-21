@@ -21,8 +21,7 @@
  * alt="npm version" height="18">
  * </a>
  *
- * isDataView module. Detect whether or not an object is an ES6 DataView or
- * a legacy DataView.
+ * isDataView module. Detect whether or not an object is a DataView.
  *
  * <h2>ECMAScript compatibility shims for legacy JavaScript engines</h2>
  * `es5-shim.js` monkey-patches a JavaScript context to contain all EcmaScript 5
@@ -41,7 +40,7 @@
  * `es6.shim.js` provides compatibility shims so that legacy JavaScript engines
  * behave as closely as possible to ECMAScript 6 (Harmony).
  *
- * @version 1.0.7
+ * @version 1.0.8
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -54,48 +53,46 @@
   freeze:true, futurehostile:true, latedef:true, newcap:true, nocomma:true,
   nonbsp:true, singleGroups:true, strict:true, undef:true, unused:true,
   es3:true, esnext:false, plusplus:true, maxparams:1, maxdepth:3,
-  maxstatements:8, maxcomplexity:6 */
+  maxstatements:17, maxcomplexity:6 */
 
 /*global module */
 
 ;(function () {
   'use strict';
 
-  var ES = require('es-abstract/es6'),
-    isObjectLike = require('is-object-like-x'),
-    toStringTag = require('to-string-tag-x'),
-    isArrayBuffer = require('is-array-buffer-x'),
-    DATAVIEW = typeof DataView === 'function' && DataView,
-    getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor,
-    getPrototypeOf = Object.getPrototypeOf,
-    getByteLength, testObject, legacyCheck;
+  var isObjectLike = require('is-object-like-x');
+  var hasDView = typeof DataView === 'function';
+  var getByteLength, legacyCheck;
 
-  if (DATAVIEW) {
-    try {
-      testObject = new DATAVIEW(new ArrayBuffer(4));
-      getByteLength = getOwnPropertyDescriptor(
-        getPrototypeOf(testObject),
-        'byteLength'
-      ).get;
-      if (typeof ES.Call(getByteLength, testObject) !== 'number') {
-        throw 'not a number';
+  if (hasDView) {
+    if (require('has-to-string-tag-x')) {
+      try {
+        getByteLength = Object.getOwnPropertyDescriptor(
+          DataView.prototype,
+          'byteLength'
+        ).get;
+        getByteLength = typeof getByteLength.call(
+          new DataView(new ArrayBuffer(4))
+        ) !== 'number' && getByteLength;
+      } catch (ignore) {
+        getByteLength = null;
       }
-    } catch (ignore) {
-      getByteLength = null;
     }
     if (!getByteLength) {
-      if (toStringTag(testObject) === '[object DataView]') {
+      var toStringTag = require('to-string-tag-x');
+      var dViewTag = '[object DataView]';
+      if (toStringTag(new DataView(new ArrayBuffer(4))) === dViewTag) {
         legacyCheck = function byStringTag(object) {
-            return toStringTag(object) === '[object DataView]';
+          return toStringTag(object) === dViewTag;
         };
       } else {
+        var isArrayBuffer = require('is-array-buffer-x');
         legacyCheck = function byDuckType(object) {
-            return toStringTag(object) === '[object Object]' &&
-              typeof object.byteLength === 'number' &&
-              typeof object.byteOffset === 'number' &&
-              isArrayBuffer(object.buffer) &&
-              ES.IsCallable(object.getFloat32) &&
-              ES.IsCallable(object.setFloat64);
+          return typeof object.byteLength === 'number' &&
+            typeof object.byteOffset === 'number' &&
+            typeof object.getFloat32 === 'function' &&
+            typeof object.setFloat64 === 'function' &&
+            isArrayBuffer(object.buffer);
         };
       }
     }
@@ -105,8 +102,6 @@
    * Determine if an `object` is an `DataView`.
    *
    * @param {*} object The object to test.
-   * @param {boolean} [es6=false] If `true` then only ES6 DataView objects will
-   * be determined `true`.
    * @return {boolean} `true` if the `object` is a `DataView`, else `false`.
    * @example
    * var isDataView = require('is-data-view-x');
@@ -118,14 +113,14 @@
    * isDataView(dv); // true
    */
   module.exports = function isDataView(object) {
-    if (!DATAVIEW || !isObjectLike(object) || !getByteLength && arguments[1]) {
+    if (!hasDView || !isObjectLike(object)) {
       return false;
     }
-    if (!getByteLength && !arguments[1]) {
+    if (legacyCheck) {
       return legacyCheck(object);
     }
     try {
-      return typeof ES.Call(getByteLength, object) === 'number';
+      return typeof getByteLength.call(object) === 'number';
     } catch (ignore) {}
     return false;
   };
