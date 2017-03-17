@@ -40,24 +40,27 @@
  * `es6.shim.js` provides compatibility shims so that legacy JavaScript engines
  * behave as closely as possible to ECMAScript 6 (Harmony).
  *
- * @version 1.0.14
+ * @version 1.1.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
  * @module is-data-view-x
  */
 
-/*jslint maxlen:80, es6:false, white:true */
+/* jslint maxlen:80, es6:true, white:true */
 
-/*jshint bitwise:true, camelcase:true, curly:true, eqeqeq:true, forin:true,
-  freeze:true, futurehostile:true, latedef:true, newcap:true, nocomma:true,
-  nonbsp:true, singleGroups:true, strict:true, undef:true, unused:true,
-  es3:true, esnext:false, plusplus:true, maxparams:1, maxdepth:3,
-  maxstatements:17, maxcomplexity:6 */
+/* jshint bitwise:true, camelcase:true, curly:true, eqeqeq:true, forin:true,
+   freeze:true, futurehostile:true, latedef:true, newcap:true, nocomma:true,
+   nonbsp:true, singleGroups:true, strict:true, undef:true, unused:true,
+   es3:false, esnext:true, plusplus:true, maxparams:1, maxdepth:1,
+   maxstatements:3, maxcomplexity:2 */
 
-/*global module */
+/* eslint strict: 1, max-statements: 1 */
 
-;(function () {
+/* global module, DataView, ArrayBuffer */
+
+;(function () { // eslint-disable-line no-extra-semi
+
   'use strict';
 
   var isObjectLike = require('is-object-like-x');
@@ -88,11 +91,11 @@
       } else {
         var isArrayBuffer = require('is-array-buffer-x');
         legacyCheck = function byDuckType(object) {
-          return typeof object.byteLength === 'number' &&
-            typeof object.byteOffset === 'number' &&
-            typeof object.getFloat32 === 'function' &&
-            typeof object.setFloat64 === 'function' &&
-            isArrayBuffer(object.buffer);
+          var isByteLength = typeof object.byteLength === 'number';
+          var isByteOffset = typeof object.byteOffset === 'number';
+          var isGetFloat32 = typeof object.getFloat32 === 'function';
+          var isSetFloat64 = typeof object.setFloat64 === 'function';
+          return isByteLength && isByteOffset && isGetFloat32 && isSetFloat64 && isArrayBuffer(object.buffer);
         };
       }
     }

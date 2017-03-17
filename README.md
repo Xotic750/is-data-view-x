@@ -1,4 +1,5 @@
 <a name="module_is-data-view-x"></a>
+
 ## is-data-view-x
 <a href="https://travis-ci.org/Xotic750/is-data-view-x"
 title="Travis status">
@@ -40,11 +41,12 @@ es5-shim.js to be able to work properly.
 `es6.shim.js` provides compatibility shims so that legacy JavaScript engines
 behave as closely as possible to ECMAScript 6 (Harmony).
 
-**Version**: 1.0.14  
-**Author:** Xotic750 <Xotic750@gmail.com>  
+**Version**: 1.1.0  
+**Author**: Xotic750 <Xotic750@gmail.com>  
 **License**: [MIT](&lt;https://opensource.org/licenses/MIT&gt;)  
 **Copyright**: Xotic750  
 <a name="exp_module_is-data-view-x--module.exports"></a>
+
 ### `module.exports(object)` ⇒ <code>boolean</code> ⏏
 Determine if an `object` is an `DataView`.
 
