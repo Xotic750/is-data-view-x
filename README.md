@@ -23,7 +23,7 @@
 ## is-data-view-x
 Detect whether or not an object is a DataView.
 
-**Version**: 1.4.0  
+**Version**: 1.5.0  
 **Author**: Xotic750 <Xotic750@gmail.com>  
 **License**: [MIT](&lt;https://opensource.org/licenses/MIT&gt;)  
 **Copyright**: Xotic750  

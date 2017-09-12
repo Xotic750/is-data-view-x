@@ -1,6 +1,6 @@
 /**
  * @file Detect whether or not an object is a DataView.
- * @version 1.4.0
+ * @version 1.5.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -11,34 +11,38 @@
 
 'use strict';
 
+var attempt = require('attempt-x');
 var isObjectLike = require('is-object-like-x');
 var hasDView = typeof DataView === 'function';
-var getByteLength;
+var getByteLength = false;
 var legacyCheck;
 
 if (hasDView) {
-  if (require('has-to-string-tag-x')) {
-    try {
-      getByteLength = Object.getOwnPropertyDescriptor(
-        DataView.prototype,
-        'byteLength'
-      ).get;
-      getByteLength = typeof getByteLength.call(
-        new DataView(new ArrayBuffer(4))
-      ) !== 'number' && getByteLength;
-    } catch (ignore) {}
+  var res = attempt(function () {
+    return new DataView(new ArrayBuffer(4));
+  });
+
+  var dataView = res.threw === false && isObjectLike(res.value) && res.value;
+
+  if (dataView && require('has-to-string-tag-x')) {
+    var getOwnPropertyDescriptor = require('object-get-own-property-descriptor-x');
+    var descriptor = getOwnPropertyDescriptor(DataView.prototype, 'byteLength');
+    if (descriptor && typeof descriptor.get === 'function') {
+      res = attempt.call(dataView, descriptor.get);
+      getByteLength = res.threw === false && typeof res.value === 'number' && descriptor.get;
+    }
   }
 
-  if (Boolean(getByteLength) === false) {
+  if (getByteLength === false) {
     var toStringTag = require('to-string-tag-x');
     var dViewTag = '[object DataView]';
-    if (toStringTag(new DataView(new ArrayBuffer(4))) === dViewTag) {
-      legacyCheck = function byStringTag(object) {
+    if (toStringTag(dataView) === dViewTag) {
+      legacyCheck = function _legacyCheck(object) {
         return toStringTag(object) === dViewTag;
       };
     } else {
       var isArrayBuffer = require('is-array-buffer-x');
-      legacyCheck = function byDuckType(object) {
+      legacyCheck = function _legacyCheck(object) {
         var isByteLength = typeof object.byteLength === 'number';
         var isByteOffset = typeof object.byteOffset === 'number';
         var isGetFloat32 = typeof object.getFloat32 === 'function';
@@ -72,9 +76,6 @@ module.exports = function isDataView(object) {
     return legacyCheck(object);
   }
 
-  try {
-    return typeof getByteLength.call(object) === 'number';
-  } catch (ignore) {}
-
-  return false;
+  var result = attempt.call(object, getByteLength);
+  return result.threw === false && typeof result.value === 'number';
 };
