@@ -1,6 +1,6 @@
 /**
  * @file Detect whether or not an object is a DataView.
- * @version 1.5.0
+ * @version 1.6.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
