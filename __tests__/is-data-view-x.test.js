@@ -2,20 +2,22 @@
    returnExports, DataView, ArrayBuffer, Int16Array, Int32Array,
    Uint8Array, Uint16Array, Uint32Array, Float32Array, Float64Array */
 
-'use strict';
+let isDataView;
 
-var isDataView;
 if (typeof module === 'object' && module.exports) {
   require('es5-shim');
   require('es5-shim/es5-sham');
+
   if (typeof JSON === 'undefined') {
     JSON = {};
   }
+
   require('json3').runInContext(null, JSON);
   require('es6-shim');
-  var es7 = require('es7-shim');
-  Object.keys(es7).forEach(function (key) {
-    var obj = es7[key];
+  const es7 = require('es7-shim');
+  Object.keys(es7).forEach(function(key) {
+    const obj = es7[key];
+
     if (typeof obj.shim === 'function') {
       obj.shim();
     }
@@ -25,10 +27,10 @@ if (typeof module === 'object' && module.exports) {
   isDataView = returnExports;
 }
 
-var ifHasDataView = typeof DataView === 'function' ? it : xit;
+const ifHasDataView = typeof DataView === 'function' ? it : xit;
 
-describe('isDataView', function () {
-  it('basic', function () {
+describe('isDataView', function() {
+  it('basic', function() {
     expect(isDataView()).toBe(false);
     expect(isDataView(undefined)).toBe(false);
     expect(isDataView(null)).toBe(false);
@@ -39,7 +41,7 @@ describe('isDataView', function () {
     expect(isDataView({})).toBe(false);
   });
 
-  ifHasDataView('hasDataView', function () {
+  ifHasDataView('hasDataView', function() {
     expect(isDataView(new ArrayBuffer(4))).toBe(false);
     expect(isDataView(new Int16Array(4))).toBe(false);
     expect(isDataView(new Int32Array(4))).toBe(false);

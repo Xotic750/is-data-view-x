@@ -9,24 +9,24 @@
 
 /* global ArrayBuffer, DataView */
 
-'use strict';
+const attempt = require('attempt-x');
+const isObjectLike = require('is-object-like-x');
 
-var attempt = require('attempt-x');
-var isObjectLike = require('is-object-like-x');
-var hasDView = typeof DataView === 'function';
-var getByteLength = false;
-var legacyCheck;
+const hasDView = typeof DataView === 'function';
+let getByteLength = false;
+let legacyCheck;
 
 if (hasDView) {
-  var res = attempt(function () {
+  let res = attempt(function() {
     return new DataView(new ArrayBuffer(4));
   });
 
-  var dataView = res.threw === false && isObjectLike(res.value) && res.value;
+  const dataView = res.threw === false && isObjectLike(res.value) && res.value;
 
   if (dataView && require('has-to-string-tag-x')) {
-    var getOwnPropertyDescriptor = require('object-get-own-property-descriptor-x');
-    var descriptor = getOwnPropertyDescriptor(DataView.prototype, 'byteLength');
+    const getOwnPropertyDescriptor = require('object-get-own-property-descriptor-x');
+    const descriptor = getOwnPropertyDescriptor(DataView.prototype, 'byteLength');
+
     if (descriptor && typeof descriptor.get === 'function') {
       res = attempt.call(dataView, descriptor.get);
       getByteLength = res.threw === false && typeof res.value === 'number' && descriptor.get;
@@ -34,19 +34,21 @@ if (hasDView) {
   }
 
   if (getByteLength === false) {
-    var toStringTag = require('to-string-tag-x');
-    var dViewTag = '[object DataView]';
+    const toStringTag = require('to-string-tag-x');
+    const dViewTag = '[object DataView]';
+
     if (toStringTag(dataView) === dViewTag) {
       legacyCheck = function _legacyCheck(object) {
         return toStringTag(object) === dViewTag;
       };
     } else {
-      var isArrayBuffer = require('is-array-buffer-x');
+      const isArrayBuffer = require('is-array-buffer-x');
       legacyCheck = function _legacyCheck(object) {
-        var isByteLength = typeof object.byteLength === 'number';
-        var isByteOffset = typeof object.byteOffset === 'number';
-        var isGetFloat32 = typeof object.getFloat32 === 'function';
-        var isSetFloat64 = typeof object.setFloat64 === 'function';
+        const isByteLength = typeof object.byteLength === 'number';
+        const isByteOffset = typeof object.byteOffset === 'number';
+        const isGetFloat32 = typeof object.getFloat32 === 'function';
+        const isSetFloat64 = typeof object.setFloat64 === 'function';
+
         return isByteLength && isByteOffset && isGetFloat32 && isSetFloat64 && isArrayBuffer(object.buffer);
       };
     }
@@ -76,6 +78,7 @@ module.exports = function isDataView(object) {
     return legacyCheck(object);
   }
 
-  var result = attempt.call(object, getByteLength);
+  const result = attempt.call(object, getByteLength);
+
   return result.threw === false && typeof result.value === 'number';
 };
