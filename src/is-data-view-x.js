@@ -9,8 +9,9 @@
 
 /* global ArrayBuffer, DataView */
 
-const attempt = require('attempt-x');
-const isObjectLike = require('is-object-like-x');
+import attempt from 'attempt-x';
+
+import isObjectLike from 'is-object-like-x';
 
 const hasDView = typeof DataView === 'function';
 let getByteLength = false;
@@ -69,7 +70,7 @@ if (hasDView) {
  * isDataView(true); // false
  * isDataView(dv); // true
  */
-module.exports = function isDataView(object) {
+export default function isDataView(object) {
   if (hasDView === false || isObjectLike(object) === false) {
     return false;
   }
@@ -81,4 +82,4 @@ module.exports = function isDataView(object) {
   const result = attempt.call(object, getByteLength);
 
   return result.threw === false && typeof result.value === 'number';
-};
+}

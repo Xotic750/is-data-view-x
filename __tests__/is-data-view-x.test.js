@@ -31,6 +31,7 @@ const ifHasDataView = typeof DataView === 'function' ? it : xit;
 
 describe('isDataView', function() {
   it('basic', function() {
+    expect.assertions(1);
     expect(isDataView()).toBe(false);
     expect(isDataView(undefined)).toBe(false);
     expect(isDataView(null)).toBe(false);
