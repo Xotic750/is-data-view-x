@@ -50,7 +50,7 @@
   "dependencies": {
     "attempt-x": "^2.0.6",
     "has-to-string-tag-x": "^2.0.6",
-    "is-array-buffer-x": "^1.7.0",
+    "is-array-buffer-x": "^2.0.0",
     "is-object-like-x": "^2.0.9",
     "object-get-own-property-descriptor-x": "^4.0.4",
     "to-string-tag-x": "^2.0.10"
