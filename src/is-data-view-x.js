@@ -1,12 +1,3 @@
-/**
- * @file Detect whether or not an object is a DataView.
- * @version 1.6.0
- * @author Xotic750 <Xotic750@gmail.com>
- * @copyright  Xotic750
- * @license {@link <https://opensource.org/licenses/MIT> MIT}
- * @module is-data-view-x
- */
-
 /* global ArrayBuffer, DataView */
 
 import attempt from 'attempt-x';
@@ -61,14 +52,6 @@ if (hasDView) {
  *
  * @param {*} object - The object to test.
  * @returns {boolean} `true` if the `object` is a `DataView`, else `false`.
- * @example
- * var isDataView = require('is-data-view-x');
- * var ab = new ArrayBuffer(4);
- * var dv = new DataView(ab);
- *
- * isDataView(ab); // false
- * isDataView(true); // false
- * isDataView(dv); // true
  */
 export default function isDataView(object) {
   if (hasDView === false || isObjectLike(object) === false) {
