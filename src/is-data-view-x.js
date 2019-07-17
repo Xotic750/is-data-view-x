@@ -53,7 +53,7 @@ if (hasDView) {
  * @param {*} object - The object to test.
  * @returns {boolean} `true` if the `object` is a `DataView`, else `false`.
  */
-export default function isDataView(object) {
+const isDataView = function isDataView(object) {
   if (hasDView === false || isObjectLike(object) === false) {
     return false;
   }
@@ -65,4 +65,6 @@ export default function isDataView(object) {
   const result = attempt.call(object, getByteLength);
 
   return result.threw === false && typeof result.value === 'number';
-}
+};
+
+export default isDataView;
