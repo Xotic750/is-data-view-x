@@ -1,25 +1,29 @@
+var _this = this;
+
+function _newArrowCheck(innerThis, boundThis) { if (innerThis !== boundThis) { throw new TypeError("Cannot instantiate an arrow function"); } }
+
 import attempt from 'attempt-x';
 import isObjectLike from 'is-object-like-x';
 import hasToStringTag from 'has-to-string-tag-x';
 import getOwnPropertyDescriptor from 'object-get-own-property-descriptor-x';
 import toStringTag from 'to-string-tag-x';
 import isArrayBuffer from 'is-array-buffer-x';
-
-const hasDView = typeof DataView === 'function';
-let getByteLength = false;
-let legacyCheck;
+var hasDView = typeof DataView === 'function';
+var getByteLength = false;
+var legacyCheck;
 
 if (hasDView) {
-  let res = attempt(() => {
+  var res = attempt(function () {
+    _newArrowCheck(this, _this);
+
     /* eslint-disable-next-line compat/compat */
     return new DataView(new ArrayBuffer(4));
-  });
-
-  const dataView = res.threw === false && isObjectLike(res.value) && res.value;
+  }.bind(this));
+  var dataView = res.threw === false && isObjectLike(res.value) && res.value;
 
   if (dataView && hasToStringTag) {
     /* eslint-disable-next-line compat/compat */
-    const descriptor = getOwnPropertyDescriptor(DataView.prototype, 'byteLength');
+    var descriptor = getOwnPropertyDescriptor(DataView.prototype, 'byteLength');
 
     if (descriptor && typeof descriptor.get === 'function') {
       res = attempt.call(dataView, descriptor.get);
@@ -28,7 +32,7 @@ if (hasDView) {
   }
 
   if (getByteLength === false) {
-    const dViewTag = '[object DataView]';
+    var dViewTag = '[object DataView]';
 
     if (toStringTag(dataView) === dViewTag) {
       legacyCheck = function _legacyCheck(object) {
@@ -36,24 +40,24 @@ if (hasDView) {
       };
     } else {
       legacyCheck = function _legacyCheck(object) {
-        const isByteLength = typeof object.byteLength === 'number';
-        const isByteOffset = typeof object.byteOffset === 'number';
-        const isGetFloat32 = typeof object.getFloat32 === 'function';
-        const isSetFloat64 = typeof object.setFloat64 === 'function';
-
+        var isByteLength = typeof object.byteLength === 'number';
+        var isByteOffset = typeof object.byteOffset === 'number';
+        var isGetFloat32 = typeof object.getFloat32 === 'function';
+        var isSetFloat64 = typeof object.setFloat64 === 'function';
         return isByteLength && isByteOffset && isGetFloat32 && isSetFloat64 && isArrayBuffer(object.buffer);
       };
     }
   }
 }
-
 /**
  * Determine if an `object` is an `DataView`.
  *
  * @param {*} object - The object to test.
  * @returns {boolean} `true` if the `object` is a `DataView`, else `false`.
  */
-const isDataView = function isDataView(object) {
+
+
+var isDataView = function isDataView(object) {
   if (hasDView === false || isObjectLike(object) === false) {
     return false;
   }
@@ -62,9 +66,10 @@ const isDataView = function isDataView(object) {
     return legacyCheck(object);
   }
 
-  const result = attempt.call(object, getByteLength);
-
+  var result = attempt.call(object, getByteLength);
   return result.threw === false && typeof result.value === 'number';
 };
 
 export default isDataView;
+
+//# sourceMappingURL=is-data-view-x.esm.js.map

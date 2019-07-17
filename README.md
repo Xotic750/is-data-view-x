@@ -21,29 +21,29 @@
 <a name="module_is-data-view-x"></a>
 
 ## is-data-view-x
+
 Detect whether or not an object is a DataView.
 
-**Version**: 1.6.0  
-**Author**: Xotic750 <Xotic750@gmail.com>  
-**License**: [MIT](&lt;https://opensource.org/licenses/MIT&gt;)  
-**Copyright**: Xotic750  
 <a name="exp_module_is-data-view-x--module.exports"></a>
 
 ### `module.exports(object)` ⇒ <code>boolean</code> ⏏
+
 Determine if an `object` is an `DataView`.
 
 **Kind**: Exported function  
-**Returns**: <code>boolean</code> - `true` if the `object` is a `DataView`, else `false`.  
+**Returns**: <code>boolean</code> - `true` if the `object` is a `DataView`, else `false`.
 
-| Param | Type | Description |
-| --- | --- | --- |
+| Param  | Type            | Description         |
+| ------ | --------------- | ------------------- |
 | object | <code>\*</code> | The object to test. |
 
-**Example**  
+**Example**
+
 ```js
-var isDataView = require('is-data-view-x');
-var ab = new ArrayBuffer(4);
-var dv = new DataView(ab);
+import isDataView from 'is-data-view-x';
+
+const ab = new ArrayBuffer(4);
+const dv = new DataView(ab);
 
 isDataView(ab); // false
 isDataView(true); // false
