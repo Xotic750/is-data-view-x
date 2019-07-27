@@ -2,13 +2,13 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2015-2017",
-  "date": "2019-07-26T14:58:55.141Z",
+  "date": "2019-07-27T09:16:22.241Z",
   "describe": "",
   "description": "Detect whether or not an object is a DataView.",
   "file": "is-data-view-x.js",
   "hash": "c7b29dd26e335a990c8b",
   "license": "MIT",
-  "version": "2.0.9"
+  "version": "2.0.10"
 }
 */
 (function webpackUniversalModuleDefinition(root, factory) {
