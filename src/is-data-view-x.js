@@ -6,44 +6,54 @@ import toStringTag from 'to-string-tag-x';
 import isArrayBuffer from 'is-array-buffer-x';
 
 const hasDView = typeof DataView === 'function';
+const dViewTag = '[object DataView]';
 let getByteLength = false;
 let legacyCheck;
 
-if (hasDView) {
-  let res = attempt(() => {
+const getDataView = function getDataView() {
+  const res = attempt(function attemptee() {
     /* eslint-disable-next-line compat/compat */
     return new DataView(new ArrayBuffer(4));
   });
 
-  const dataView = res.threw === false && isObjectLike(res.value) && res.value;
+  return res.threw === false && isObjectLike(res.value) && res.value;
+};
+
+const getByteLengthGetter = function getByteLengthGetter(dataView) {
+  /* eslint-disable-next-line compat/compat */
+  const descriptor = getOwnPropertyDescriptor(DataView.prototype, 'byteLength');
+
+  if (descriptor && typeof descriptor.get === 'function') {
+    const res = attempt.call(dataView, descriptor.get);
+
+    return res.threw === false && typeof res.value === 'number' && descriptor.get;
+  }
+
+  return null;
+};
+
+const legacyCheck1 = function legacyCheck1(object) {
+  return toStringTag(object) === dViewTag;
+};
+
+const legacyCheck2 = function legacyCheck2(object) {
+  const isByteLength = typeof object.byteLength === 'number';
+  const isByteOffset = typeof object.byteOffset === 'number';
+  const isGetFloat32 = typeof object.getFloat32 === 'function';
+  const isSetFloat64 = typeof object.setFloat64 === 'function';
+
+  return isByteLength && isByteOffset && isGetFloat32 && isSetFloat64 && isArrayBuffer(object.buffer);
+};
+
+if (hasDView) {
+  const dataView = getDataView();
 
   if (dataView && hasToStringTag) {
-    /* eslint-disable-next-line compat/compat */
-    const descriptor = getOwnPropertyDescriptor(DataView.prototype, 'byteLength');
-
-    if (descriptor && typeof descriptor.get === 'function') {
-      res = attempt.call(dataView, descriptor.get);
-      getByteLength = res.threw === false && typeof res.value === 'number' && descriptor.get;
-    }
+    getByteLength = getByteLengthGetter(dataView);
   }
 
   if (getByteLength === false) {
-    const dViewTag = '[object DataView]';
-
-    if (toStringTag(dataView) === dViewTag) {
-      legacyCheck = function _legacyCheck(object) {
-        return toStringTag(object) === dViewTag;
-      };
-    } else {
-      legacyCheck = function _legacyCheck(object) {
-        const isByteLength = typeof object.byteLength === 'number';
-        const isByteOffset = typeof object.byteOffset === 'number';
-        const isGetFloat32 = typeof object.getFloat32 === 'function';
-        const isSetFloat64 = typeof object.setFloat64 === 'function';
-
-        return isByteLength && isByteOffset && isGetFloat32 && isSetFloat64 && isArrayBuffer(object.buffer);
-      };
-    }
+    legacyCheck = toStringTag(dataView) === dViewTag ? legacyCheck1 : legacyCheck2;
   }
 }
 
