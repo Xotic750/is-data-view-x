@@ -7,8 +7,6 @@ import isArrayBuffer from 'is-array-buffer-x';
 
 const hasDView = typeof DataView === 'function';
 const dViewTag = '[object DataView]';
-let getByteLength = false;
-let legacyCheck;
 
 const getDataView = function getDataView() {
   const res = attempt(function attemptee() {
@@ -45,17 +43,24 @@ const legacyCheck2 = function legacyCheck2(object) {
   return isByteLength && isByteOffset && isGetFloat32 && isSetFloat64 && isArrayBuffer(object.buffer);
 };
 
-if (hasDView) {
-  const dataView = getDataView();
+const init = function init(hasDataView) {
+  if (hasDataView) {
+    const dataView = getDataView();
+    const getByteLength = dataView && hasToStringTag ? getByteLengthGetter(dataView) : false;
 
-  if (dataView && hasToStringTag) {
-    getByteLength = getByteLengthGetter(dataView);
+    return {
+      getByteLength,
+      legacyCheck: getByteLength === false && toStringTag(dataView) === dViewTag ? legacyCheck1 : legacyCheck2,
+    };
   }
 
-  if (getByteLength === false) {
-    legacyCheck = toStringTag(dataView) === dViewTag ? legacyCheck1 : legacyCheck2;
-  }
-}
+  return {
+    getByteLength: false,
+    legacyCheck: false,
+  };
+};
+
+const {getByteLength, legacyCheck} = init(hasDView);
 
 /**
  * Determine if an `object` is an `DataView`.
