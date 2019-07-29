@@ -2,11 +2,11 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2015-2017",
-  "date": "2019-07-27T22:06:57.685Z",
+  "date": "2019-07-29T19:55:13.709Z",
   "describe": "",
   "description": "Detect whether or not an object is a DataView.",
   "file": "is-data-view-x.js",
-  "hash": "ffa1608603d256924523",
+  "hash": "2bc6fa611865629fa78a",
   "license": "MIT",
   "version": "2.0.11"
 }
@@ -1724,8 +1724,8 @@ if (nativeGOPD) {
   var getOPDWorksOnDom = doc ? object_get_own_property_descriptor_x_esm_doesGOPDWork(doc.createElement('div'), 'sentinel') : true;
 
   if (getOPDWorksOnDom) {
-    var res = attempt_x_esm(nativeGOPD, object_get_own_property_descriptor_x_esm_castObject('abc'), 1);
-    var worksWithStr = res.threw === false && res.value && res.value.value === 'b';
+    var object_get_own_property_descriptor_x_esm_res = attempt_x_esm(nativeGOPD, object_get_own_property_descriptor_x_esm_castObject('abc'), 1);
+    var worksWithStr = object_get_own_property_descriptor_x_esm_res.threw === false && object_get_own_property_descriptor_x_esm_res.value && object_get_own_property_descriptor_x_esm_res.value.value === 'b';
 
     if (worksWithStr) {
       var getOPDWorksOnObject = object_get_own_property_descriptor_x_esm_doesGOPDWork({}, 'sentinel');
@@ -1947,10 +1947,6 @@ var is_array_buffer_x_esm_isArrayBuffer = function isArrayBuffer(object) {
 
 
 // CONCATENATED MODULE: ./dist/is-data-view-x.esm.js
-var is_data_view_x_esm_this = undefined;
-
-function is_data_view_x_esm_newArrowCheck(innerThis, boundThis) { if (innerThis !== boundThis) { throw new TypeError("Cannot instantiate an arrow function"); } }
-
 
 
 
@@ -1958,46 +1954,61 @@ function is_data_view_x_esm_newArrowCheck(innerThis, boundThis) { if (innerThis 
 
 
 var hasDView = typeof DataView === 'function';
-var getByteLength = false;
-var legacyCheck;
+var dViewTag = '[object DataView]';
 
-if (hasDView) {
-  var is_data_view_x_esm_res = attempt_x_esm(function () {
-    is_data_view_x_esm_newArrowCheck(this, is_data_view_x_esm_this);
-
+var is_data_view_x_esm_getDataView = function getDataView() {
+  var res = attempt_x_esm(function attemptee() {
     /* eslint-disable-next-line compat/compat */
     return new DataView(new ArrayBuffer(4));
-  }.bind(undefined));
-  var dataView = is_data_view_x_esm_res.threw === false && is_object_like_x_esm(is_data_view_x_esm_res.value) && is_data_view_x_esm_res.value;
+  });
+  return res.threw === false && is_object_like_x_esm(res.value) && res.value;
+};
 
-  if (dataView && has_to_string_tag_x_esm) {
-    /* eslint-disable-next-line compat/compat */
-    var is_data_view_x_esm_descriptor = object_get_own_property_descriptor_x_esm(DataView.prototype, 'byteLength');
+var is_data_view_x_esm_getByteLengthGetter = function getByteLengthGetter(dataView) {
+  /* eslint-disable-next-line compat/compat */
+  var descriptor = object_get_own_property_descriptor_x_esm(DataView.prototype, 'byteLength');
 
-    if (is_data_view_x_esm_descriptor && typeof is_data_view_x_esm_descriptor.get === 'function') {
-      is_data_view_x_esm_res = attempt_x_esm.call(dataView, is_data_view_x_esm_descriptor.get);
-      getByteLength = is_data_view_x_esm_res.threw === false && typeof is_data_view_x_esm_res.value === 'number' && is_data_view_x_esm_descriptor.get;
-    }
+  if (descriptor && typeof descriptor.get === 'function') {
+    var res = attempt_x_esm.call(dataView, descriptor.get);
+    return res.threw === false && typeof res.value === 'number' && descriptor.get;
   }
 
-  if (getByteLength === false) {
-    var dViewTag = '[object DataView]';
+  return null;
+};
 
-    if (to_string_tag_x_esm(dataView) === dViewTag) {
-      legacyCheck = function _legacyCheck(object) {
-        return to_string_tag_x_esm(object) === dViewTag;
-      };
-    } else {
-      legacyCheck = function _legacyCheck(object) {
-        var isByteLength = typeof object.byteLength === 'number';
-        var isByteOffset = typeof object.byteOffset === 'number';
-        var isGetFloat32 = typeof object.getFloat32 === 'function';
-        var isSetFloat64 = typeof object.setFloat64 === 'function';
-        return isByteLength && isByteOffset && isGetFloat32 && isSetFloat64 && is_array_buffer_x_esm(object.buffer);
-      };
-    }
+var is_data_view_x_esm_legacyCheck1 = function legacyCheck1(object) {
+  return to_string_tag_x_esm(object) === dViewTag;
+};
+
+var is_data_view_x_esm_legacyCheck2 = function legacyCheck2(object) {
+  var isByteLength = typeof object.byteLength === 'number';
+  var isByteOffset = typeof object.byteOffset === 'number';
+  var isGetFloat32 = typeof object.getFloat32 === 'function';
+  var isSetFloat64 = typeof object.setFloat64 === 'function';
+  return isByteLength && isByteOffset && isGetFloat32 && isSetFloat64 && is_array_buffer_x_esm(object.buffer);
+};
+
+var is_data_view_x_esm_init = function init(hasDataView) {
+  if (hasDataView) {
+    var dataView = is_data_view_x_esm_getDataView();
+
+    var _getByteLength = dataView && has_to_string_tag_x_esm ? is_data_view_x_esm_getByteLengthGetter(dataView) : false;
+
+    return {
+      getByteLength: _getByteLength,
+      legacyCheck: _getByteLength === false && to_string_tag_x_esm(dataView) === dViewTag ? is_data_view_x_esm_legacyCheck1 : is_data_view_x_esm_legacyCheck2
+    };
   }
-}
+
+  return {
+    getByteLength: false,
+    legacyCheck: false
+  };
+};
+
+var _init = is_data_view_x_esm_init(hasDView),
+    getByteLength = _init.getByteLength,
+    legacyCheck = _init.legacyCheck;
 /**
  * Determine if an `object` is an `DataView`.
  *

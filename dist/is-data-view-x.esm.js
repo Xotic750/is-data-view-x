@@ -1,7 +1,3 @@
-var _this = this;
-
-function _newArrowCheck(innerThis, boundThis) { if (innerThis !== boundThis) { throw new TypeError("Cannot instantiate an arrow function"); } }
-
 import attempt from 'attempt-x';
 import isObjectLike from 'is-object-like-x';
 import hasToStringTag from 'has-to-string-tag-x';
@@ -9,46 +5,61 @@ import getOwnPropertyDescriptor from 'object-get-own-property-descriptor-x';
 import toStringTag from 'to-string-tag-x';
 import isArrayBuffer from 'is-array-buffer-x';
 var hasDView = typeof DataView === 'function';
-var getByteLength = false;
-var legacyCheck;
+var dViewTag = '[object DataView]';
 
-if (hasDView) {
-  var res = attempt(function () {
-    _newArrowCheck(this, _this);
-
+var getDataView = function getDataView() {
+  var res = attempt(function attemptee() {
     /* eslint-disable-next-line compat/compat */
     return new DataView(new ArrayBuffer(4));
-  }.bind(this));
-  var dataView = res.threw === false && isObjectLike(res.value) && res.value;
+  });
+  return res.threw === false && isObjectLike(res.value) && res.value;
+};
 
-  if (dataView && hasToStringTag) {
-    /* eslint-disable-next-line compat/compat */
-    var descriptor = getOwnPropertyDescriptor(DataView.prototype, 'byteLength');
+var getByteLengthGetter = function getByteLengthGetter(dataView) {
+  /* eslint-disable-next-line compat/compat */
+  var descriptor = getOwnPropertyDescriptor(DataView.prototype, 'byteLength');
 
-    if (descriptor && typeof descriptor.get === 'function') {
-      res = attempt.call(dataView, descriptor.get);
-      getByteLength = res.threw === false && typeof res.value === 'number' && descriptor.get;
-    }
+  if (descriptor && typeof descriptor.get === 'function') {
+    var res = attempt.call(dataView, descriptor.get);
+    return res.threw === false && typeof res.value === 'number' && descriptor.get;
   }
 
-  if (getByteLength === false) {
-    var dViewTag = '[object DataView]';
+  return null;
+};
 
-    if (toStringTag(dataView) === dViewTag) {
-      legacyCheck = function _legacyCheck(object) {
-        return toStringTag(object) === dViewTag;
-      };
-    } else {
-      legacyCheck = function _legacyCheck(object) {
-        var isByteLength = typeof object.byteLength === 'number';
-        var isByteOffset = typeof object.byteOffset === 'number';
-        var isGetFloat32 = typeof object.getFloat32 === 'function';
-        var isSetFloat64 = typeof object.setFloat64 === 'function';
-        return isByteLength && isByteOffset && isGetFloat32 && isSetFloat64 && isArrayBuffer(object.buffer);
-      };
-    }
+var legacyCheck1 = function legacyCheck1(object) {
+  return toStringTag(object) === dViewTag;
+};
+
+var legacyCheck2 = function legacyCheck2(object) {
+  var isByteLength = typeof object.byteLength === 'number';
+  var isByteOffset = typeof object.byteOffset === 'number';
+  var isGetFloat32 = typeof object.getFloat32 === 'function';
+  var isSetFloat64 = typeof object.setFloat64 === 'function';
+  return isByteLength && isByteOffset && isGetFloat32 && isSetFloat64 && isArrayBuffer(object.buffer);
+};
+
+var init = function init(hasDataView) {
+  if (hasDataView) {
+    var dataView = getDataView();
+
+    var _getByteLength = dataView && hasToStringTag ? getByteLengthGetter(dataView) : false;
+
+    return {
+      getByteLength: _getByteLength,
+      legacyCheck: _getByteLength === false && toStringTag(dataView) === dViewTag ? legacyCheck1 : legacyCheck2
+    };
   }
-}
+
+  return {
+    getByteLength: false,
+    legacyCheck: false
+  };
+};
+
+var _init = init(hasDView),
+    getByteLength = _init.getByteLength,
+    legacyCheck = _init.legacyCheck;
 /**
  * Determine if an `object` is an `DataView`.
  *
