@@ -2,13 +2,13 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2015-2017",
-  "date": "2019-08-13T15:42:20.707Z",
+  "date": "2019-08-14T15:56:31.105Z",
   "describe": "",
   "description": "Detect whether or not an object is a DataView.",
   "file": "is-data-view-x.js",
-  "hash": "388fb69c8e4d7fd704fc",
+  "hash": "97020217defc745e51a6",
   "license": "MIT",
-  "version": "2.0.13"
+  "version": "2.1.0"
 }
 */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -1372,7 +1372,8 @@ var toStringSymbolsSupported = function toStringSymbolsSupported(value) {
  *
  * @type number
  */
-/* harmony default export */ var nan_x_esm = (0 / 0);
+var constantNAN = 0 / 0;
+/* harmony default export */ var nan_x_esm = (constantNAN);
 
 
 // CONCATENATED MODULE: ./node_modules/parse-int-x/dist/parse-int-x.esm.js
@@ -1551,7 +1552,8 @@ var is_nan_x_esm_isNaN = function isNaN(value) {
  *
  * @type number
  */
-/* harmony default export */ var infinity_x_esm = (1 / 0);
+var constantInfinity = 1 / 0;
+/* harmony default export */ var infinity_x_esm = (constantInfinity);
 
 
 // CONCATENATED MODULE: ./node_modules/is-finite-x/dist/is-finite-x.esm.js
