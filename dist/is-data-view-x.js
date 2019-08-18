@@ -2,11 +2,11 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2015-2017",
-  "date": "2019-08-15T20:44:04.080Z",
+  "date": "2019-08-18T14:29:45.435Z",
   "describe": "",
   "description": "Detect whether or not an object is a DataView.",
   "file": "is-data-view-x.js",
-  "hash": "97020217defc745e51a6",
+  "hash": "882da54797b181a17810",
   "license": "MIT",
   "version": "2.1.0"
 }
@@ -223,33 +223,6 @@ module.exports = function isPrimitive(val) {
 "use strict";
 
 
-var getDay = Date.prototype.getDay;
-var tryDateObject = function tryDateObject(value) {
-	try {
-		getDay.call(value);
-		return true;
-	} catch (e) {
-		return false;
-	}
-};
-
-var toStr = Object.prototype.toString;
-var dateClass = '[object Date]';
-var hasToStringTag = typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol';
-
-module.exports = function isDateObject(value) {
-	if (typeof value !== 'object' || value === null) { return false; }
-	return hasToStringTag ? tryDateObject(value) : toStr.call(value) === dateClass;
-};
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 var strValue = String.prototype.valueOf;
 var tryStringObject = function tryStringObject(value) {
 	try {
@@ -267,6 +240,33 @@ module.exports = function isString(value) {
 	if (typeof value === 'string') { return true; }
 	if (typeof value !== 'object') { return false; }
 	return hasToStringTag ? tryStringObject(value) : toStr.call(value) === strClass;
+};
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var getDay = Date.prototype.getDay;
+var tryDateObject = function tryDateObject(value) {
+	try {
+		getDay.call(value);
+		return true;
+	} catch (e) {
+		return false;
+	}
+};
+
+var toStr = Object.prototype.toString;
+var dateClass = '[object Date]';
+var hasToStringTag = typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol';
+
+module.exports = function isDateObject(value) {
+	if (typeof value !== 'object' || value === null) { return false; }
+	return hasToStringTag ? tryDateObject(value) : toStr.call(value) === dateClass;
 };
 
 
@@ -1110,7 +1110,7 @@ var to_object_x_esm_toObject = function toObject(value) {
 
 
 // EXTERNAL MODULE: ./node_modules/is-date-object/index.js
-var is_date_object = __webpack_require__(2);
+var is_date_object = __webpack_require__(3);
 var is_date_object_default = /*#__PURE__*/__webpack_require__.n(is_date_object);
 
 // CONCATENATED MODULE: ./node_modules/to-primitive-x/dist/to-primitive-x.esm.js
@@ -1336,7 +1336,7 @@ var has_own_property_x_esm_hasOwnProperty = function hasOwnProperty(object, prop
 
 
 // EXTERNAL MODULE: ./node_modules/is-string/index.js
-var is_string = __webpack_require__(3);
+var is_string = __webpack_require__(2);
 var is_string_default = /*#__PURE__*/__webpack_require__.n(is_string);
 
 // CONCATENATED MODULE: ./node_modules/to-string-symbols-supported-x/dist/to-string-symbols-supported-x.esm.js
@@ -2014,7 +2014,335 @@ var is_array_buffer_x_esm_isArrayBuffer = function isArrayBuffer(object) {
 /* harmony default export */ var is_array_buffer_x_esm = (is_array_buffer_x_esm_isArrayBuffer);
 
 
+// CONCATENATED MODULE: ./node_modules/is-primitive-x/dist/is-primitive-x.esm.js
+function is_primitive_x_esm_typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { is_primitive_x_esm_typeof = function _typeof(obj) { return typeof obj; }; } else { is_primitive_x_esm_typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return is_primitive_x_esm_typeof(obj); }
+
+/**
+ * Returns true if the value is a primitive.
+ *
+ * @param {*} [val] - The value to test.
+ * @returns {boolean} True if a primitive, otherwise false..
+ */
+var isPrimitive = function isPrimitive(val) {
+  return is_primitive_x_esm_typeof(val) === 'object' ? val === null : typeof val !== 'function';
+};
+
+/* harmony default export */ var is_primitive_x_esm = (isPrimitive);
+
+
+// CONCATENATED MODULE: ./node_modules/util-pusher-x/dist/util-pusher-x.esm.js
+
+
+var util_pusher_x_esm_EMPTY_STRING = '';
+var split = util_pusher_x_esm_EMPTY_STRING.split;
+var splitter = [util_pusher_x_esm_EMPTY_STRING];
+
+var util_pusher_x_esm_getIterable = function getIterable(arrayLike) {
+  // noinspection JSUnresolvedFunction
+  return is_string_default()(arrayLike) ? split.apply(arrayLike, splitter) : arrayLike;
+}; // eslint-disable jsdoc/no-undefined-types
+// noinspection JSCommentMatchesSignature
+
+/**
+ * This pushes or concatenates into a new or existing array.
+ *
+ * @param {Array} arrayLike - The source.
+ * @param {number} [from=0] - The from source index.
+ * @param {Array} [target=[]] - The target array.
+ * @returns {*} The target array.
+ */
+// eslint-enable jsdoc/no-undefined-types
+
+
+var util_pusher_x_esm_pusher = function pusher(arrayLike, from) {
+  /* eslint-disable-next-line prefer-rest-params */
+  var target = arguments.length > 2 ? arguments[2] : [];
+
+  if (typeof arrayLike !== 'string' && is_primitive_x_esm(arrayLike)) {
+    return target;
+  }
+
+  var iterable = util_pusher_x_esm_getIterable(arrayLike);
+  var length = iterable.length;
+
+  for (var i = from || 0; i < length; i += 1) {
+    target[target.length] = arrayLike[i];
+  }
+
+  return target;
+};
+
+/* harmony default export */ var util_pusher_x_esm = (util_pusher_x_esm_pusher);
+
+
+// CONCATENATED MODULE: ./node_modules/simple-bind-x/dist/simple-bind-x.esm.js
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+var simple_bind_x_esm_ERROR_MESSAGE = 'bind called on incompatible ';
+var simple_bind_x_esm_object = {};
+var simple_bind_x_esm_ObjectCtr = simple_bind_x_esm_object.constructor;
+var simple_bind_x_esm_toStringTag = simple_bind_x_esm_object.toString;
+var funcType = '[object Function]';
+var simple_bind_x_esm_ZERO = 0;
+var argsOffset = 2;
+
+var getMax = function getMax(a, b) {
+  return a >= b ? a : b;
+};
+
+var assertIsFunction = function assertIsFunction(value) {
+  if (typeof value !== 'function' && simple_bind_x_esm_toStringTag.apply(value) !== funcType) {
+    throw new TypeError(simple_bind_x_esm_ERROR_MESSAGE + value);
+  }
+};
+
+var boundFns = [function zero(binder) {
+  return function boundFn() {
+    /* eslint-disable-next-line babel/no-invalid-this,prefer-rest-params */
+    return binder.apply(this, util_pusher_x_esm(arguments));
+  };
+}, function one(binder, boundLength) {
+  return function boundFn(a) {
+    /* eslint-disable-next-line babel/no-invalid-this,prefer-rest-params */
+    return binder.apply(this, util_pusher_x_esm(arguments, boundLength, [a]));
+  };
+}, function two(binder, boundLength) {
+  return function boundFn(a, b) {
+    /* eslint-disable-next-line babel/no-invalid-this,prefer-rest-params */
+    return binder.apply(this, util_pusher_x_esm(arguments, boundLength, [a, b]));
+  };
+}, function three(binder, boundLength) {
+  /* eslint-disable-next-line max-params */
+  return function boundFn(a, b, c) {
+    /* eslint-disable-next-line babel/no-invalid-this,prefer-rest-params */
+    return binder.apply(this, util_pusher_x_esm(arguments, boundLength, [a, b, c]));
+  };
+}, function four(binder, boundLength) {
+  /* eslint-disable-next-line max-params */
+  return function boundFn(a, b, c, d) {
+    /* eslint-disable-next-line babel/no-invalid-this,prefer-rest-params */
+    return binder.apply(this, util_pusher_x_esm(arguments, boundLength, [a, b, c, d]));
+  };
+}, function five(binder, boundLength) {
+  /* eslint-disable-next-line max-params */
+  return function boundFn(a, b, c, d, e) {
+    /* eslint-disable-next-line babel/no-invalid-this,prefer-rest-params */
+    return binder.apply(this, util_pusher_x_esm(arguments, boundLength, [a, b, c, d, e]));
+  };
+}, function six(binder, boundLength) {
+  /* eslint-disable-next-line max-params */
+  return function boundFn(a, b, c, d, e, f) {
+    /* eslint-disable-next-line babel/no-invalid-this,prefer-rest-params */
+    return binder.apply(this, util_pusher_x_esm(arguments, boundLength, [a, b, c, d, e, f]));
+  };
+}, function seven(binder, boundLength) {
+  /* eslint-disable-next-line max-params */
+  return function boundFn(a, b, c, d, e, f, g) {
+    /* eslint-disable-next-line babel/no-invalid-this,prefer-rest-params */
+    return binder.apply(this, util_pusher_x_esm(arguments, boundLength, [a, b, c, d, e, f, g]));
+  };
+}, function eight(binder, boundLength) {
+  /* eslint-disable-next-line max-params */
+  return function boundFn(a, b, c, d, e, f, g, h) {
+    /* eslint-disable-next-line babel/no-invalid-this,prefer-rest-params */
+    return binder.apply(this, util_pusher_x_esm(arguments, boundLength, [a, b, c, d, e, f, g, h]));
+  };
+}];
+
+var getBoundFn = function getBoundFn(args) {
+  var _args = _slicedToArray(args, 3),
+      binder = _args[0],
+      target = _args[1],
+      bindArgs = _args[2];
+
+  var boundLength = getMax(simple_bind_x_esm_ZERO, target.length - getMax(simple_bind_x_esm_ZERO, bindArgs.length - argsOffset));
+  var fn = boundFns[boundLength];
+  var boundFn = fn ? fn(binder, boundLength) : boundFns[simple_bind_x_esm_ZERO](binder);
+
+  if (target.prototype) {
+    /* eslint-disable-next-line lodash/prefer-noop */
+    var Empty = function Empty() {};
+
+    Empty.prototype = target.prototype;
+    boundFn.prototype = new Empty();
+    Empty.prototype = null;
+  }
+
+  return boundFn;
+};
+
+var simple_bind_x_esm_getResult = function getResult(target, boundArgs) {
+  /* eslint-disable-next-line babel/no-invalid-this */
+  var result = target.apply(this, boundArgs);
+  /* eslint-disable-next-line babel/no-invalid-this,babel/new-cap */
+
+  return simple_bind_x_esm_ObjectCtr(result) === result ? result : this;
+}; // eslint-disable jsdoc/check-param-names
+// noinspection JSCommentMatchesSignature
+
+/**
+ * The bind() method creates a new function that, when called, has its this
+ * keyword set to the provided value, with a given sequence of arguments
+ * preceding any provided when the new function is called.
+ *
+ * @param {Function} target - The target function.
+ * @param {*} [thisArg] - The value to be passed as the this parameter to the target
+ *  function when the bound function is called. The value is ignored if the
+ *  bound function is constructed using the new operator.
+ * @param {...*} [args] - Arguments to prepend to arguments provided to the bound
+ *  function when invoking the target function.
+ * @throws {TypeError} If target is not a function.
+ * @returns {Function} The bound function.
+ */
+// eslint-enable jsdoc/check-param-names
+
+
+var simple_bind_x_esm_bind = function bind(target, thisArg) {
+  assertIsFunction(target);
+  /* eslint-disable-next-line prefer-rest-params */
+
+  var bindArgs = arguments;
+  var bound;
+
+  var binder = function binder() {
+    /* eslint-disable-next-line prefer-rest-params */
+    var boundArgs = util_pusher_x_esm(arguments, simple_bind_x_esm_ZERO, util_pusher_x_esm(bindArgs, argsOffset));
+    /* eslint-disable-next-line babel/no-invalid-this */
+
+    return this instanceof bound ? simple_bind_x_esm_getResult.apply(this, [target, boundArgs]) : target.apply(thisArg, boundArgs);
+  };
+
+  bound = getBoundFn([binder, target, bindArgs]);
+  return bound;
+};
+
+/* harmony default export */ var simple_bind_x_esm = (simple_bind_x_esm_bind);
+
+
+// CONCATENATED MODULE: ./node_modules/simple-call-x/dist/simple-call-x.esm.js
+
+
+var $TypeError = TypeError;
+var nativeApply = simple_bind_x_esm.apply,
+    nativeCall = simple_bind_x_esm.call;
+var $apply = simple_bind_x_esm(nativeCall, nativeApply);
+var simple_call_x_esm_toStringTag = simple_bind_x_esm(nativeApply, {}.toString);
+var simple_call_x_esm_ERROR_MESSAGE = ' is not a function';
+var simple_call_x_esm_funcType = '[object Function]';
+
+var simple_call_x_esm_assertIsFunction = function assertIsFunction(value) {
+  if (typeof value !== 'function' && simple_call_x_esm_toStringTag(value) !== simple_call_x_esm_funcType) {
+    throw new $TypeError(value + simple_call_x_esm_ERROR_MESSAGE);
+  }
+
+  return value;
+}; // eslint-disable jsdoc/check-param-names
+// noinspection JSCommentMatchesSignature
+
+/**
+ * The abstract operation Call is used to call the [[Call]] internal method of a function object.
+ *
+ * @function call
+ * @param {Function} F - The target function.
+ * @param {*} [V] - The context.
+ * @param {Array} [args] - Argument to call the function with.
+ * @throws {TypeError} If target is not a function.
+ * @returns {*} The the result of invoking the function.
+ * @see https://www.ecma-international.org/ecma-262/6.0/#sec-call
+ */
+// eslint-enable jsdoc/check-param-names
+
+
+var simple_call_x_esm_call = function call(F, V) {
+  /* eslint-disable-next-line prefer-rest-params */
+  return $apply(simple_call_x_esm_assertIsFunction(F), V, util_pusher_x_esm(arguments[2]));
+};
+
+/* harmony default export */ var simple_call_x_esm = (simple_call_x_esm_call);
+
+
+// CONCATENATED MODULE: ./node_modules/util-get-getter-x/dist/util-get-getter-x.esm.js
+
+
+
+
+
+var stubTrue = function stubTrue() {
+  return true;
+};
+/**
+ * @param {Function|!object} creator - A creator function or a created object.
+ * @returns {!object} - An attempt object.
+ */
+
+
+var util_get_getter_x_esm_getResult = function getResult(creator) {
+  return typeof creator === 'function' ? attempt_x_esm(creator) : {
+    threw: false,
+    value: creator
+  };
+}; // eslint-disable jsdoc/check-param-names
+// noinspection JSCommentMatchesSignature
+
+/**
+ * @param {!object} descriptor - A descriptor object.
+ * @param {!object} context - A created object.
+ * @param {Function} [validator] - A function to validate the result.
+ * @returns {Function|null} - The getter function or null.
+ */
+// eslint-enable jsdoc/check-param-names
+
+
+var util_get_getter_x_esm_getter = function getter(descriptor, context) {
+  /* eslint-disable-next-line prefer-rest-params */
+  var validator = typeof arguments[2] === 'function' ? arguments[2] : stubTrue;
+  var res = attempt_x_esm(function attemptee() {
+    return simple_call_x_esm(descriptor.get, context);
+  });
+  return res.threw === false && validator(res.value) ? descriptor.get : null;
+}; // eslint-disable jsdoc/check-param-names
+// noinspection JSCommentMatchesSignature
+
+/**
+ * Get a getter.
+ *
+ * @param {Function|!object} creator - A creator function or a created object.
+ * @param {string} getterName - The getter name.
+ * @param {Function} [validator] - A function to validate the result.
+ * @returns {Function|null} The target.
+ */
+// eslint-enable jsdoc/check-param-names
+
+
+var util_get_getter_x_esm_getGetter = function getGetter(creator, getterName) {
+  var resTest1 = util_get_getter_x_esm_getResult(creator);
+
+  if (resTest1.threw === false && is_object_like_x_esm(resTest1.value)) {
+    var descriptor = object_get_own_property_descriptor_x_esm(resTest1.value.constructor.prototype, getterName);
+
+    if (descriptor && typeof descriptor.get === 'function') {
+      /* eslint-disable-next-line prefer-rest-params */
+      return util_get_getter_x_esm_getter(descriptor, resTest1.value, arguments[2]);
+    }
+  }
+
+  return null;
+};
+
+/* harmony default export */ var util_get_getter_x_esm = (util_get_getter_x_esm_getGetter);
+
+
 // CONCATENATED MODULE: ./dist/is-data-view-x.esm.js
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "legacyCheck1", function() { return is_data_view_x_esm_legacyCheck1; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "legacyCheck2", function() { return is_data_view_x_esm_legacyCheck2; });
+
 
 
 
@@ -2024,31 +2352,19 @@ var is_array_buffer_x_esm_isArrayBuffer = function isArrayBuffer(object) {
 var hasDView = typeof DataView === 'function';
 var dViewTag = '[object DataView]';
 
-var is_data_view_x_esm_getDataView = function getDataView() {
-  var res = attempt_x_esm(function attemptee() {
-    /* eslint-disable-next-line compat/compat */
-    return new DataView(new ArrayBuffer(4));
-  });
+var is_data_view_x_esm_getDataView = function getDataView(creator) {
+  var res = attempt_x_esm(creator);
   return res.threw === false && is_object_like_x_esm(res.value) && res.value;
-};
-
-var is_data_view_x_esm_getByteLengthGetter = function getByteLengthGetter(dataView) {
-  /* eslint-disable-next-line compat/compat */
-  var descriptor = object_get_own_property_descriptor_x_esm(DataView.prototype, 'byteLength');
-
-  if (descriptor && typeof descriptor.get === 'function') {
-    var res = attempt_x_esm.call(dataView, descriptor.get);
-    return res.threw === false && typeof res.value === 'number' && descriptor.get;
-  }
-
-  return null;
 };
 
 var is_data_view_x_esm_legacyCheck1 = function legacyCheck1(object) {
   return to_string_tag_x_esm(object) === dViewTag;
 };
-
 var is_data_view_x_esm_legacyCheck2 = function legacyCheck2(object) {
+  if (is_object_like_x_esm(object) === false) {
+    return false;
+  }
+
   var isByteLength = typeof object.byteLength === 'number';
   var isByteOffset = typeof object.byteOffset === 'number';
   var isGetFloat32 = typeof object.getFloat32 === 'function';
@@ -2056,26 +2372,35 @@ var is_data_view_x_esm_legacyCheck2 = function legacyCheck2(object) {
   return isByteLength && isByteOffset && isGetFloat32 && isSetFloat64 && is_array_buffer_x_esm(object.buffer);
 };
 
-var is_data_view_x_esm_init = function init(hasDataView) {
-  if (hasDataView) {
-    var dataView = is_data_view_x_esm_getDataView();
+var is_data_view_x_esm_validator = function validator(value) {
+  return typeof value === 'number';
+};
 
-    var _getByteLength = dataView && has_to_string_tag_x_esm ? is_data_view_x_esm_getByteLengthGetter(dataView) : false;
+var is_data_view_x_esm_creator = function creator() {
+  /* eslint-disable-next-line compat/compat */
+  return new DataView(new ArrayBuffer(4));
+};
+
+var is_data_view_x_esm_init = function init() {
+  if (hasDView) {
+    var dataView = is_data_view_x_esm_getDataView(is_data_view_x_esm_creator);
+
+    var _byteLength = dataView && has_to_string_tag_x_esm ? util_get_getter_x_esm(dataView, 'byteLength', is_data_view_x_esm_validator) : null;
 
     return {
-      getByteLength: _getByteLength,
-      legacyCheck: _getByteLength === false && to_string_tag_x_esm(dataView) === dViewTag ? is_data_view_x_esm_legacyCheck1 : is_data_view_x_esm_legacyCheck2
+      byteLength: _byteLength,
+      legacyCheck: _byteLength === null && is_data_view_x_esm_legacyCheck1(dataView) ? is_data_view_x_esm_legacyCheck1 : is_data_view_x_esm_legacyCheck2
     };
   }
 
   return {
-    getByteLength: false,
-    legacyCheck: false
+    byteLength: null,
+    legacyCheck: null
   };
 };
 
-var _init = is_data_view_x_esm_init(hasDView),
-    getByteLength = _init.getByteLength,
+var _init = is_data_view_x_esm_init(),
+    byteLength = _init.byteLength,
     legacyCheck = _init.legacyCheck;
 /**
  * Determine if an `object` is an `DataView`.
@@ -2090,12 +2415,14 @@ var is_data_view_x_esm_isDataView = function isDataView(object) {
     return false;
   }
 
-  if (legacyCheck) {
+  if (byteLength === null && legacyCheck) {
     return legacyCheck(object);
   }
 
-  var result = attempt_x_esm.call(object, getByteLength);
-  return result.threw === false && typeof result.value === 'number';
+  var result = attempt_x_esm(function attemptee() {
+    return simple_call_x_esm(byteLength, object);
+  });
+  return result.threw === false && is_data_view_x_esm_validator(result.value);
 };
 
 /* harmony default export */ var is_data_view_x_esm = __webpack_exports__["default"] = (is_data_view_x_esm_isDataView);

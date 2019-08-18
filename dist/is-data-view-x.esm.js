@@ -1,37 +1,26 @@
 import attempt from 'attempt-x';
 import isObjectLike from 'is-object-like-x';
 import hasToStringTag from 'has-to-string-tag-x';
-import getOwnPropertyDescriptor from 'object-get-own-property-descriptor-x';
 import toStringTag from 'to-string-tag-x';
 import isArrayBuffer from 'is-array-buffer-x';
+import call from 'simple-call-x';
+import getGetter from 'util-get-getter-x';
 var hasDView = typeof DataView === 'function';
 var dViewTag = '[object DataView]';
 
-var getDataView = function getDataView() {
-  var res = attempt(function attemptee() {
-    /* eslint-disable-next-line compat/compat */
-    return new DataView(new ArrayBuffer(4));
-  });
+var getDataView = function getDataView(creator) {
+  var res = attempt(creator);
   return res.threw === false && isObjectLike(res.value) && res.value;
 };
 
-var getByteLengthGetter = function getByteLengthGetter(dataView) {
-  /* eslint-disable-next-line compat/compat */
-  var descriptor = getOwnPropertyDescriptor(DataView.prototype, 'byteLength');
-
-  if (descriptor && typeof descriptor.get === 'function') {
-    var res = attempt.call(dataView, descriptor.get);
-    return res.threw === false && typeof res.value === 'number' && descriptor.get;
-  }
-
-  return null;
-};
-
-var legacyCheck1 = function legacyCheck1(object) {
+export var legacyCheck1 = function legacyCheck1(object) {
   return toStringTag(object) === dViewTag;
 };
+export var legacyCheck2 = function legacyCheck2(object) {
+  if (isObjectLike(object) === false) {
+    return false;
+  }
 
-var legacyCheck2 = function legacyCheck2(object) {
   var isByteLength = typeof object.byteLength === 'number';
   var isByteOffset = typeof object.byteOffset === 'number';
   var isGetFloat32 = typeof object.getFloat32 === 'function';
@@ -39,26 +28,35 @@ var legacyCheck2 = function legacyCheck2(object) {
   return isByteLength && isByteOffset && isGetFloat32 && isSetFloat64 && isArrayBuffer(object.buffer);
 };
 
-var init = function init(hasDataView) {
-  if (hasDataView) {
-    var dataView = getDataView();
+var validator = function validator(value) {
+  return typeof value === 'number';
+};
 
-    var _getByteLength = dataView && hasToStringTag ? getByteLengthGetter(dataView) : false;
+var creator = function creator() {
+  /* eslint-disable-next-line compat/compat */
+  return new DataView(new ArrayBuffer(4));
+};
+
+var init = function init() {
+  if (hasDView) {
+    var dataView = getDataView(creator);
+
+    var _byteLength = dataView && hasToStringTag ? getGetter(dataView, 'byteLength', validator) : null;
 
     return {
-      getByteLength: _getByteLength,
-      legacyCheck: _getByteLength === false && toStringTag(dataView) === dViewTag ? legacyCheck1 : legacyCheck2
+      byteLength: _byteLength,
+      legacyCheck: _byteLength === null && legacyCheck1(dataView) ? legacyCheck1 : legacyCheck2
     };
   }
 
   return {
-    getByteLength: false,
-    legacyCheck: false
+    byteLength: null,
+    legacyCheck: null
   };
 };
 
-var _init = init(hasDView),
-    getByteLength = _init.getByteLength,
+var _init = init(),
+    byteLength = _init.byteLength,
     legacyCheck = _init.legacyCheck;
 /**
  * Determine if an `object` is an `DataView`.
@@ -73,12 +71,14 @@ var isDataView = function isDataView(object) {
     return false;
   }
 
-  if (legacyCheck) {
+  if (byteLength === null && legacyCheck) {
     return legacyCheck(object);
   }
 
-  var result = attempt.call(object, getByteLength);
-  return result.threw === false && typeof result.value === 'number';
+  var result = attempt(function attemptee() {
+    return call(byteLength, object);
+  });
+  return result.threw === false && validator(result.value);
 };
 
 export default isDataView;
