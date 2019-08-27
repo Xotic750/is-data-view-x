@@ -2,7 +2,7 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2015-2017",
-  "date": "2019-08-20T20:20:38.561Z",
+  "date": "2019-08-27T21:12:20.192Z",
   "describe": "",
   "description": "Detect whether or not an object is a DataView.",
   "file": "is-data-view-x.js",
